@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Concise</title>
+    
+    <!-- Link to your *existing* CSS file -->
+    <link rel="stylesheet" href="concise2.css">
+    <style>
+        .form-group{
+            font-style: oblique;
+             font-weight: 700;
+    background: linear-gradient(to bottom, #121315, #4f535d);
+
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+        }
+        #message{
+            font-style: oblique;
+            background: linear-gradient(to bottom, #121315, #4f535d);
+border-radius: 5px;
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+        }
+        #email{
+            border-radius: 5px;
+font-style: oblique;
+            background: linear-gradient(to bottom, #121315, #4f535d);
+
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+        }
+        #name{
+            border-radius: 5px;
+font-style: oblique;
+            background: linear-gradient(to bottom, #121315, #4f535d);
+
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+        }
+        .section-title{
+             font-weight: 700;
+    background: var(--gradient-text);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+        }
+        .button-primary  {
+    padding: 16px 24px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-white);
+    background-color: var(--color-primary-light);
+   border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 250ms ease-in-out, transform 250ms ease-in-out;
+}
+.button-primary :hover {
+    background-color: var(--color-primary-dark);
+    transform: scale(2.05);
+}
+.button-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-bg-light), 0 0 0 4px var(--color-primary); 
+}
+.shift{
+    margin-left: 10px;
+}
+.contact-link{
+    margin-left: 10px;
+}
+.link{
+    margin-left: 10px;
+}
+.contact-card{
+    font-size: 15px;
+}
+    </style>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="app-container" class="app-container">
+        
+        <!-- ================================== -->
+        <!-- HEADER (Reusable)                  -->
+        <!-- ================================== -->
+        <header>
+            <div class="navcontainer">
+                <nav>
+                    <ul id="navlist">
+                        <li>
+                            <!-- This should link back to your main page -->
+                            <a href="index.html" id="nav-link-home" class="navlogo-clickable">
+                                <p id="navlogo"> CONCISE </p>
+                            </a>
+                        </li>
+                        <li>
+                            <div id="listitem">
+                                <!-- Update links to point to the correct pages -->
+                                 <a href="concise1.html" id="nav-link-home">Home</a>
+                                <a href="concise3.html" id="nav-link-contact">Contact</a>
+                                <a href="concise2.html" id="nav-link-about">About</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- ================================== -->
+        <!-- MAIN CONTENT: CONTACT              -->
+        <!-- ================================== -->
+        <main>
+            <!-- 
+              Using "panel" centers the content and gives it a max-width.
+              Using "page-content" applies all your text styling (font size, color).
+            -->
+            <div id="contact-panel" class="panel page-content animate-fade-in">
+                
+                <h1 class="title-main-blue">Get In Touch</h1>
+                <p>
+                    Have a question, feedback, or a partnership idea? We'd love to hear from you. Fill out the form below or email us directly, and we'll get back to you as soon as possible.
+                </p>
+
+                <!-- This is a new, styled contact form -->
+                <form id="contact-form" class="contact-form" action="#" method="POST">
+                    <div class="form-group">
+                        <label for="name">Your Name-</label>
+                        <!-- MODIFIED: Added placeholder=" " to enable the floating label effect -->
+                        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Your Email-</label>
+                        <!-- MODIFIED: Added placeholder=" " to enable the floating label effect -->
+                        <input type="email" id="email" name="email" placeholder="Enter an email " required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message-</label>
+                        <!-- MODIFIED: Added placeholder=" " to enable the floating label effect -->
+                        <textarea id="message" name="message" rows="6" column="5" placeholder="Enter a message" required></textarea>
+                    </div>
+
+                    <div class="form-group1">
+                        <button type="submit" class="button-primary">Send Message</button>
+                    </div>
+                </form>
+                
+                <!-- Extra Contact Details -->
+                <h2 class="section-title">Other Ways to Reach Us</h2>
+                <div class="contact-details-flex">
+                    <div class="contact-card">
+                        <h3>Email Us</h3>
+                     <tab class="shift">   For support and inquiries:
+                       <p><a href="mailto:support@concise.example.com" class="contact-link">support@concise.ac.in</a></p>
+                    
+                    </tab></div>
+                    <div class="contact-card">
+                        <h3>Follow Us</h3>
+                      <tab class="link">  Stay up-to-date:
+                        <p><a href="https://www.instagram.com/_suryam1802_?igsh=OGZjeHM4c3Z6ZjB0" class="contact-link">Instagram</a> | <a href="https://www.linkedin.com/in/suryam-singh-626061346?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" class="contact-link">LinkedIn</a></p>
+                    </tab></div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- ================================== -->
+        <!-- FOOTER (Reusable)                  -->
+        <!-- ================================== -->
+        <footer>
+           <div class="footer">
+             <p>
+                 Copyright &copy;CONCISE pvt Ltd 2024 All Rights Reserved
+             </p>
+           </div>
+        </footer>
+
+    </div> <!-- End .app-container -->
+</body>
+</html>

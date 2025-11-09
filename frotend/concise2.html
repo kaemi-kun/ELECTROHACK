@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Concise</title>
+    
+    <!-- Link to your *existing* CSS file -->
+    <link rel="stylesheet" href="concise2.css">
+    <style>
+    .section-title{
+         font-weight: 700;
+    background: var(--gradient-text);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    }
+    </style>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="app-container" class="app-container">
+        
+        <!-- ================================== -->
+        <!-- HEADER (Reusable)                  -->
+        <!-- ================================== -->
+        <header>
+            <div class="navcontainer">
+                <nav>
+                    <ul id="navlist">
+                        <li>
+                            <!-- This should link back to your main page -->
+                            <a href="index.html" id="nav-link-home" class="navlogo-clickable">
+                                <p id="navlogo"> CONCISE </p>
+                            </a>
+                        </li>
+                        <li>
+                            <div id="listitem">
+                                <!-- Update links to point to the correct pages -->
+                                 <a href="concise1.html" id="nav-link-home">Home</a>
+                                <a href="concise3.html" id="nav-link-contact">Contact</a>
+                                <a href="concise2.html" id="nav-link-about">About</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- ================================== -->
+        <!-- MAIN CONTENT: ABOUT                -->
+        <!-- ================================== -->
+        <main>
+            <!-- 
+              Using "panel" centers the content and gives it a max-width.
+              Using "page-content" applies all your text styling (font size, color).
+            -->
+            <div id="about-panel" class="panel page-content animate-fade-in">
+                
+                <h1 class="title-main-blue">Our Mission</h1>
+                <p>
+                    In a world flooded with information, making a simple purchase can feel overwhelming. We've all been there: staring at a product with 10,000 reviews, trying to find the one or two comments that *actually* matter.
+                </p>
+                <p>
+                    <strong>CONCISE was built to solve this problem.</strong>
+                </p>
+                <p>
+                    Our mission is to cut through the noise. We use powerful AI to read, analyze, and understand thousands of customer reviews in seconds. We distill all that data into a simple, unbiased, and easy-to-read summary, so you can stop guessing and start making confident decisions.
+                </p>
+
+                <!-- This "how-it-works" section uses flexbox -->
+                <h2 class="section-title">How It Works</h2>
+                <div class="feature-flex-container">
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">1.</span>
+                        <h3>Paste Any Link</h3>
+                        <p>Just copy the URL of a product from any major online store.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="feature-icon">2.</span>
+                        <h3>AI Analysis</h3>
+                        <p>Our AI reads every review, identifying key topics and overall sentiment.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="feature-icon">3.</span>
+                        <h3>Get Your Summary</h3>
+                        <p>We deliver a "Concise" report with the top pros, cons, and trends.</p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- ================================== -->
+        <!-- FOOTER (Reusable)                  -->
+        <!-- ================================== -->
+        <footer>
+           <div class="footer">
+             <p>
+                 Copyright &copy;CONCISE pvt Ltd 2024 All Rights Reserved
+             </p>
+           </div>
+        </footer>
+
+    </div> <!-- End .app-container -->
+</body>
+</html>

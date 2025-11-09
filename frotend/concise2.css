@@ -1,0 +1,685 @@
+/* ================================================================== */
+/* 1. Global Styles & Resets
+/* ================================================================== */
+
+:root {
+    /* Brand Colors */
+    --color-primary: #3b82f6;
+    --color-primary-dark: #1d4ed8;
+    --color-primary-light: #6393fa;
+    --color-primary-hover: #5782de;
+
+    /* Secondary Colors */
+    --color-secondary-green: #22c55e;
+    --color-secondary-red: #f63c3c;
+    --color-red-light: #fee2e2;
+    --color-error: #f79c9c;
+
+    /* Text Colors */
+    --color-text-dark: #111827;
+    --color-text-medium: #374151;
+    --color-text-light: #6b7280;
+    --color-text-subtle: #9ca3af;
+    --color-text-white: #ffffff;
+
+    /* Backgrounds & Borders */
+    --color-bg-light: #f9fafb;
+    --color-bg-white: #ffffff;
+    --color-border: #e5e7eb;
+
+    /* Gradients */
+    --gradient-nav: linear-gradient(90deg,rgb(118, 246, 246) 0%, rgb(169, 169, 255) 35%, rgb(157, 218, 232) 100%);
+    --gradient-footer: linear-gradient(90deg,rgb(180, 228, 228) 0%, rgb(151, 151, 235) 35%, rgb(145, 218, 233) 100%);
+    --gradient-text: linear-gradient(90deg,rgb(153, 238, 238) 0%, rgb(112, 112, 245) 35%, rgb(157, 218, 232) 100%);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    background-color: var(--color-bg-light);
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text-dark);
+    min-height: 100%;
+    width: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-text-white);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+.animate-slide-in-up {
+    animation: slideInUp 0.5s ease-out;
+    animation-fill-mode: backwards;
+}
+
+/* ================================================================== */
+/* 2. App Layout (Simplified with Flexbox)
+/* ================================================================== */
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+header {
+    width: 100%;
+}
+
+main {
+    flex: 1; /* This makes main grow to fill available space */
+    width: 100%;
+    
+    /* Use flex to center the panels */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+main:has(#results-panel:not(.hidden)) {
+    padding: 2rem;
+}
+@media (min-width: 768px) {
+    main:has(#results-panel:not(.hidden)) {
+        padding: 2.5rem; /* p-10 */
+    }
+}
+
+
+footer {
+    width: 100%;
+    flex-shrink: 0; /* Prevents footer from shrinking */
+}
+
+.panel, .panel-results {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.panel {
+    max-width: 672px; /* max-w-2xl */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.panel-results {
+    max-width: 1152px; /* max-w-6xl */
+}
+
+
+/* ================================================================== */
+/* 3. Header & Footer
+/* ================================================================== */
+
+.navcontainer {
+    background: var(--gradient-nav);
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 1px 8px 1px rgb(144, 138, 138);
+}
+
+nav {
+    width: 100%;
+    padding-right: 2rem;
+    padding-left: 4rem;
+}
+
+#navlist {
+    list-style: none;
+    font-size: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-style:oblique;
+}
+
+#navlogo {
+    font-size: 1.75rem;
+    color: var(--color-text-white);
+    font-style: oblique;
+    font-weight: 700;
+}
+
+/* Makes the logo feel like a button */
+.navlogo-clickable {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    /* This removes link underlines from the <p> tag */
+    text-decoration: none; 
+}
+.navlogo-clickable:hover {
+    transform: scale(1.05);
+}
+
+#listitem {
+    display: flex;
+    gap: 40px;
+}
+#listitem a {
+    transition: transform 0.2s ease;
+}
+#listitem a:hover {
+    transform: scale(1.05);
+}
+
+.footer {
+    background: var(--gradient-footer);
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.footer p {
+    color: var(--color-text-white);
+    font-size: 0.875rem;
+}
+
+/* ================================================================== */
+/* 4. Panel 1: Home
+/* ================================================================== */
+
+.home-header {
+    text-align: center;
+}
+
+.title-main-blue, .title-main-gray, .loading-title {
+    font-weight: 700;
+    background: var(--gradient-text);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.title-main-blue {
+    font-size: 2.5rem; 
+}
+.title-main-gray {
+    font-size: 2.5rem; 
+    margin-top: 8px;
+}
+.subtitle {
+    margin-top: 16px;
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+}
+
+.input-section {
+    margin-top: 40px;
+}
+
+.input-group {
+    display: flex;
+    width: 100%;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    border-radius: 10px;
+}
+
+#url-input {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.125rem;
+    border: 1px solid var(--color-border);
+    border-right: 0;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+#url-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+#analyze-button {
+    padding: 16px 24px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-white);
+    background-color: var(--color-primary-light);
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 250ms ease-in-out, transform 250ms ease-in-out;
+}
+#analyze-button:hover {
+    background-color: var(--color-primary-dark);
+    transform: scale(1.05);
+}
+#analyze-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-bg-light), 0 0 0 4px var(--color-primary); 
+}
+
+.error-message {
+    margin-top: 12px;
+    text-align: center;
+    color: var(--color-error);
+    font-weight: 500;
+}
+
+/* ================================================================== */
+/* 5. Panel 2: Loading
+/* ================================================================== */
+
+.loading-header {
+    text-align: center;
+}
+.loading-title {
+    font-size: 2rem;
+}
+.loading-subtitle {
+    margin-top: 12px;
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+}
+
+.stepper-container {
+    margin-top: 40px;
+    max-width: 512px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stepper-list {
+    list-style: none;
+    padding: 0;
+}
+.stepper-list > li + li {
+    margin-top: 16px;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.step-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    margin-right: 0.75rem;
+}
+.step-pending {
+    color: var(--color-text-subtle);
+}
+.step-pending .step-icon {
+    border: 2px solid var(--color-text-subtle);
+    color: var(--color-text-subtle);
+}
+.step-active {
+    color: var(--color-primary);
+}
+.step-active .step-icon {
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+    animation: spin 900ms linear infinite;
+}
+.step-done {
+    color: var(--color-text-dark);
+}
+.step-done .step-icon {
+    background-color: var(--color-secondary-green);
+    color: var(--color-text-white);
+    border: 2px solid var(--color-secondary-green);
+}
+
+/* ================================================================== */
+/* 6. Panel 3: Results
+/* ================================================================== */
+
+.product-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--color-bg-white);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    border: 1px solid var(--color-border);
+}
+
+#product-image {
+    width: 144px;
+    height: 144px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.product-info {
+    margin-top: 16px;
+    text-align: center;
+}
+
+#product-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-dark);
+}
+
+.score-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.score-number-blue {
+    font-size: 2rem;
+    font-weight: 700;
+    background: var(--gradient-text);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.score-number-gray {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-subtle);
+    margin: 0 4px;
+}
+.product-stars {
+    margin-left: 12px;
+    font-size: 1.5rem;
+}
+
+#product-verdict {
+    margin-top: 8px;
+    font-size: 1.125rem;
+    color: var(--color-text-light);
+}
+
+.pros-cons-grid {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+}
+
+.card {
+    background-color: var(--color-bg-white);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    border: 1px solid var(--color-border);
+    margin-top: 32px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
+.pros-cons-grid .card {
+    margin-top: 0;
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+}
+
+.pros-title .card-icon { color: var(--color-secondary-green); }
+.cons-title .card-icon { color: var(--color-secondary-red); }
+
+.pros, .cons {
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    color: inherit;
+}
+
+.card-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+}
+
+.review-list {
+    margin-top: 16px;
+    list-style-type: disc;
+    list-style-position: inside;
+    color: var(--color-text-medium);
+    font-size: 1.125rem;
+    padding-left: 0;
+}
+.review-list > li + li {
+    margin-top: 12px;
+}
+
+.card-title-standalone {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+}
+
+.trends-container {
+    margin-top: 20px;
+}
+.trends-container > .trend-item + .trend-item {
+    margin-top: 20px;
+}
+
+.trend-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+.trend-topic {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-text-medium);
+}
+.trend-sentiment {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-light);
+}
+.trend-bar-container {
+    display: flex;
+    width: 100%;
+    height: 12px;
+    background-color: var(--color-red-light);
+    border-radius: 9999px;
+    overflow: hidden;
+}
+.trend-bar-positive {
+    background-color: var(--color-secondary-green);
+    height: 100%;
+}
+
+.reset-container {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.button-primary {
+    padding: 12px 24px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-white);
+    background-color: var(--color-primary-hover);
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 150ms ease-in-out;
+}
+.button-primary:hover {
+    background-color: var(--color-primary-dark);
+}
+.button-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-bg-light), 0 0 0 4px var(--color-primary);
+}
+
+/* ================================================================== */
+/* 7. Responsive Media Queries
+/* ================================================================== */
+
+@media (min-width: 768px) {
+    .title-main-blue, .title-main-gray {
+        font-size: 3rem;
+    }
+    .product-header {
+        flex-direction: row;
+    }
+    .product-info {
+        margin-left: 24px;
+        margin-top: 0;
+        text-align: left;
+    }
+    .score-container {
+        justify-content: flex-start;
+    }
+}
+
+@media (min-width: 1024px) {
+    .pros-cons-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ================================================================== */
+/* 8. New Page Content Styles (For About/Contact)
+/* ================================================================== */
+
+/* Styles for the text on About/Contact panels */
+.page-content {
+    text-align: left; /* Overrides .home-header's center text */
+}
+
+.page-content h1 {
+    margin-bottom: 1.5rem;
+}
+
+.page-content p {
+    font-size: 1.125rem; /* text-lg */
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.page-content strong {
+    color: var(--color-text-medium);
+}
+
+.page-content .contact-link {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+.page-content .contact-link:hover {
+    text-decoration: underline;
+}
+
+/* New Section Title for "How it Works" */
+.section-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 0.5rem;
+}
+
+/* New Flexbox Container for "How it Works" */
+.feature-flex-container {
+    display: flex;
+    flex-direction: column; /* Stacks on mobile */
+    gap: 1.5rem;
+}
+
+.feature-card {
+    background: var(--color-bg-white);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    flex: 1; /* This makes them share space equally */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
+.feature-card h3 {
+    font-size: 1.25rem;
+    color: var(--color-text-dark);
+    margin-bottom: 0.5rem;
+}
+.feature-card p {
+    font-size: 1rem;
+    color: var(--color-text-light);
+    margin-bottom: 0;
+}
+
+.feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--gradient-text);
+    color: var(--color-text-white);
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+/* On tablets and up, show cards side-by-side */
+@media (min-width: 768px) {
+    .feature-flex-container {
+        flex-direction: row; /* Side-by-side */
+    }
+}

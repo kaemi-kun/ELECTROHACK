@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Summarizer</title>
+    
+    <link rel="stylesheet" href="concise1.css">
+    <style>
+        .panel{
+            padding: min(4em,6%);
+            width:800px ;
+            background-color:rgb(228, 228, 225) ;
+             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            border-radius: 1em;
+
+        }
+  .logo{
+    
+    width: 3rem;
+    height: 1.5rem;
+  }
+  #navlist{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    
+  }
+
+    </style>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="app-container" class="app-container">
+        <header><div class="navcontainer">
+            <nav>
+                <ul id="navlist">
+                    <li> 
+                        <p id="navlogo"> 
+                            <img src="logoprj.png" class="logo">
+                            CONCISE 
+                            
+                        </p>
+                    </li>
+                    <li>
+                        <div id="listitem">
+                            <a href="concise1.html">Home</a>
+                            <a href="concise3.html">Contact</a>
+                            <a href="concise2.html">About</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div></header>
+<main>
+   
+    <div id="home-panel" class="panel">
+        
+        
+        
+        <div class="home-header">
+            <h1 class="title-main-blue">Stop Guessing.</h1>
+            <h2 class="title-main-gray">Start Summarizing.</h2>
+            <p class="subtitle">
+                Paste any product link to get an instant, unbiased summary of all reviews—pros, cons, and top trends.
+            </p>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="text" id="url-input" placeholder="Paste your product URL here...">
+                <button id="analyze-button">Analyze</button>
+            </div>
+            <div id="error-message" class="error-message hidden">
+                Please paste a valid product URL to begin.
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-panel" class="panel hidden animate-fade-in">
+        <div class="loading-header">
+            <h2 class="loading-title">Analyzing Reviews...</h2>
+            <p class="loading-subtitle">
+                Hold tight! Our AI is reading thousands of reviews to build your report.
+            </p>
+        </div>
+
+        <div class="stepper-container">
+            <ul class="stepper-list">
+                <li id="step-1" class="step-item step-pending">
+                    <div class="step-icon">1</div>
+                    Fetching product page
+                </li>
+                <li id="step-2" class="step-item step-pending">
+                    <div class="step-icon">2</div>
+                    Reading all reviews
+                </li>
+                <li id="step-3" class="step-item step-pending">
+                    <div class="step-icon">3</div>
+                    Analyzing sentiment and topics
+                </li>
+                <li id="step-4" class="step-item step-pending">
+                    <div class="step-icon">4</div>
+                    Generating final report
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="results-panel" class="panel-results hidden animate-fade-in">
+        
+        <div id="product-header" class="product-header animate-slide-in-up" style="animation-delay: 0.1s;">
+            <img id="product-image" src="https://placehold.co/150x150/e2e8f0/9ca3af?text=Product" alt="Product Image">
+            <div class="product-info">
+                <h2 id="product-title">Product Title Will Go Here</h2>
+                
+                <div class="score-container">
+                    <div id="product-score" class="score-number-blue">4.1</div>
+                    <div class="score-number-gray">/</div>
+                    <div class="score-number-gray">5.0</div>
+                    <div id="product-stars" class="product-stars">⭐⭐⭐⭐</div>
+                </div>
+                
+                <p id="product-verdict">The quick verdict summary will go here.</p>
+            </div>
+        </div>
+
+        <div class="pros-cons-grid">
+            <div class="card animate-slide-in-up" style="animation-delay: 0.3s;">
+                <h3 class="card-title pros-title">
+                    <svg class="card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2 10.313V12a9.01 9.01 0 0 0 1.25 4.33c.09.18.18.35.28.52A3.001 3.001 0 0 0 6 18.5V21a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-2.5a3.001 3.001 0 0 0 2.47-1.64.998.998 0 0 0 .28-.52A9.01 9.01 0 0 0 20 12v-1.688a1.99 1.99 0 0 0-.6-1.458l-3-3a1.99 1.99 0 0 0-1.458-.6H7.99C6.89 3.25 6 4.14 6 5.25v5.063Z" />
+                    </svg>
+                    <p class="pros"> What People Liked (Pros)</p>
+                </h3>
+                <ul id="pros-list" class="review-list">
+                    </ul>
+            </div>
+            
+            <div class="card animate-slide-in-up" style="animation-delay: 0.5s;">
+                <h3 class="card-title cons-title">
+                    <svg class="card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M2 13.687V12a9.01 9.01 0 0 1 1.25-4.33.998.998 0 0 1 .28-.52A3.001 3.001 0 0 1 6 5.5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2.5a3.001 3.001 0 0 1 2.47 1.64.998.998 0 0 1 .28.52A9.01 9.01 0 0 1 20 12v1.688a1.99 1.99 0 0 1-.6 1.458l-3 3a1.99 1.99 0 0 1-1.458.6H7.99C6.89 18.75 6 17.86 6 16.75v-5.063Z" />
+                    </svg>
+                    <p class="cons"> What People Disliked (Cons)</p>
+                </h3>
+                <ul id="cons-list" class="review-list">
+                    </ul>
+            </div>
+        </div>
+        
+        <div class="card animate-slide-in-up" style="animation-delay: 0.7s;">
+            <h3 class="card-title-standalone">
+                Top Topics & Sentiment
+            </h3>
+            <div id="trends-container" class="trends-container">
+                </div>
+        </div>
+
+        <div class="reset-container">
+            <button id="reset-button" class="button-primary">
+                Analyze Another Product
+            </button>
+        </div>
+
+    </div>
+</main>
+        <footer>
+           <div class="footer">
+             <p>
+                 Copyright &copy;CONCISE pvt Ltd 2024 All Rights Reserved
+             </p>
+           </div>
+        </footer>
+    </div> <script>
+        // --- 1. GET ALL THE ELEMENTS ---
+        const homePanel = document.getElementById('home-panel');
+        const loadingPanel = document.getElementById('loading-panel');
+        const resultsPanel = document.getElementById('results-panel');
+        
+        const urlInput = document.getElementById('url-input');
+        const analyzeButton = document.getElementById('analyze-button');
+        const errorMessage = document.getElementById('error-message');
+
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const step3 = document.getElementById('step-3');
+        const step4 = document.getElementById('step-4');
+        const steps = [step1, step2, step3, step4];
+
+        const productImage = document.getElementById('product-image');
+        const productTitle = document.getElementById('product-title');
+        const productScore = document.getElementById('product-score');
+        const productStars = document.getElementById('product-stars');
+        const productVerdict = document.getElementById('product-verdict');
+        const prosList = document.getElementById('pros-list');
+        const consList = document.getElementById('cons-list');
+        const trendsContainer = document.getElementById('trends-container');
+        const resetButton = document.getElementById('reset-button');
+        
+        // --- 2. FAKE DATA FOR THE DEMO ---
+        const FAKE_DATA = {
+            productTitle: "Sony WH-1000XM5 Wireless Noise-Canceling Headphones",
+            productImage: "https://placehold.co/150x150/0a0a0a/ffffff?text=XM5",
+            score: 4.6,
+            stars: "⭐⭐⭐⭐🌗",
+            verdict: "An outstanding choice for noise-canceling and comfort, but the price and microphone quality are valid concerns.",
+            pros: [
+                "The noise-canceling is absolutely top-tier, blocking out everything from plane engines to office chatter.",
+                "Incredibly comfortable and lightweight; I can wear them for an 8-hour flight with no issues.",
+                "Sound quality is rich and detailed, with great bass response.",
+                "Battery life is amazing, easily lasting 30+ hours."
+            ],
+            cons: [
+                "The microphone quality for calls is surprisingly poor, people say I sound 'distant'.",
+                "They are very expensive, a significant jump from the previous model.",
+                "The new design doesn't fold, making them bulkier for travel.",
+                "The plastic build feels a bit less premium than the price suggests."
+            ],
+            trends: [
+                { topic: "Noise Canceling", positive: 90, negative: 10 },
+                { topic: "Battery Life", positive: 85, negative: 15 },
+                { topic: "Comfort", positive: 80, negative: 20 },
+                { topic: "Sound Quality", positive: 75, negative: 25 },
+                { topic: "Mic Quality", positive: 20, negative: 80 },
+                { topic: "Price", positive: 30, negative: 70 },
+            ]
+        };
+
+        // --- 3. EVENT LISTENERS ---
+        analyzeButton.addEventListener('click', startAnalysis);
+        resetButton.addEventListener('click', resetApp);
+        
+        // --- 4. CORE FUNCTIONS ---
+
+async function startAnalysis() {
+    const url = urlInput.value;
+    
+    if (!url || !url.includes('http')) {
+        errorMessage.classList.remove('hidden');
+        return;
+    }
+    
+    errorMessage.classList.add('hidden');
+    homePanel.classList.add('hidden');
+    resultsPanel.classList.add('hidden');
+    loadingPanel.classList.remove('hidden');
+
+    try {
+        const response = await fetch('http://localhost:8000/analyze', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ product_url: url })
+        });
+        
+        console.log("Response status:", response.status); // ADD THIS LINE
+        console.log("Response ok:", response.ok); // ADD THIS LINE
+        
+        const data = await response.json();
+        
+        console.log("Backend data:", data); // ADD THIS LINE
+        
+        if (data.status === 'success') {
+            loadingPanel.classList.add('hidden');
+            resultsPanel.classList.remove('hidden');
+            populateResults(data);
+        } else {
+            throw new Error(data.message);
+        }
+    } catch (error) {
+        console.error('Analysis failed:', error);
+        loadingPanel.classList.add('hidden');
+        resultsPanel.classList.remove('hidden');
+        populateResults(FAKE_DATA);
+    }
+}
+
+        function simulateLoading() {
+            // Reset all steps to pending
+            steps.forEach(step => {
+                step.className = "step-item step-pending";
+                // Reset icon to its number
+                const iconDiv = step.querySelector('.step-icon');
+                if (iconDiv) {
+                    iconDiv.textContent = steps.indexOf(step) + 1;
+                }
+            });
+        
+            // Simulate the steps
+            setTimeout(() => { updateStep(step1, 'active', 1); }, 500);
+            setTimeout(() => { updateStep(step1, 'done', 1); updateStep(step2, 'active', 2); }, 1500);
+            setTimeout(() => { updateStep(step2, 'done', 2); updateStep(step3, 'active', 3); }, 3500);
+            setTimeout(() => { updateStep(step3, 'done', 3); updateStep(step4, 'active', 4); }, 5000);
+            setTimeout(() => { updateStep(step4, 'done', 4); }, 6000);
+            
+            // Finish loading and show results
+            setTimeout(() => {
+                loadingPanel.classList.add('hidden');
+                resultsPanel.classList.remove('hidden');
+                populateResults(FAKE_DATA);
+            }, 6500);
+        }
+        
+        /**
+         * Helper to update the class and icon of a loading step.
+         */
+        function updateStep(stepElement, status, stepNumber) {
+            const iconMap = {
+                pending: `${stepNumber}`,
+                active: '⚙', // Spinner emoji
+                done: '✔' // Checkmark emoji
+            };
+            
+            // Set the class name for styling
+            stepElement.className = `step-item step-${status}`;
+            
+            // Update the icon text
+            const iconDiv = stepElement.querySelector('.step-icon');
+            if (iconDiv) {
+                iconDiv.textContent = iconMap[status];
+            }
+        }
+
+        /**
+         * Populates the results panel with data.
+         */
+ function populateResults(data) {
+    console.log("Backend data received:", data);
+    
+    // Use the ACTUAL field names from backend
+    productTitle.textContent = data.productTitle || "Product";
+    productScore.textContent = data.score || "N/A";  // Our AI rating
+    productStars.textContent = data.stars || "⭐⭐⭐☆☆";
+    productVerdict.textContent = data.verdict || "Analysis complete";
+    
+    // Clear previous data
+    prosList.innerHTML = '';
+    consList.innerHTML = '';
+    trendsContainer.innerHTML = '';
+
+    // Show AI-generated pros
+    if (data.pros && data.pros.length > 0) {
+        data.pros.forEach(pro => {
+            const li = document.createElement('li');
+            li.textContent = pro;
+            prosList.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.textContent = "No pros identified";
+        prosList.appendChild(li);
+    }
+
+    // Show AI-generated cons
+    if (data.cons && data.cons.length > 0) {
+        data.cons.forEach(con => {
+            const li = document.createElement('li');
+            li.textContent = con;
+            consList.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.textContent = "No cons identified";
+        consList.appendChild(li);
+    }
+
+    // Show comprehensive analysis including review count
+    trendsContainer.innerHTML = `
+        <div class="trend-item">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-lg font-medium text-gray-700">Buy Score</span>
+                <span class="text-sm font-medium text-gray-500">${data.buyScore || 0}/100 - ${data.recommendation || "N/A"}</span>
+            </div>
+            <div class="flex w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="bg-green-500" style="width: ${data.buyScore || 0}%"></div>
+            </div>
+        </div>
+        <div class="trend-item">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-lg font-medium text-gray-700">Total Reviews</span>
+                <span class="text-sm font-medium text-gray-500">${data.totalReviews || 0} reviews analyzed</span>
+            </div>
+            <div class="flex w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="bg-blue-500" style="width: ${Math.min((data.totalReviews || 0) / 100, 100)}%"></div>
+            </div>
+        </div>
+        <div class="trend-item">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-lg font-medium text-gray-700">Price</span>
+                <span class="text-sm font-medium text-gray-500">${data.price || "Not available"}</span>
+            </div>
+            <div class="flex w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="bg-purple-500" style="width: 100%"></div>
+            </div>
+        </div>
+    `;
+}
+        
+        function resetApp() {
+            // Hide results/loading, show home
+            resultsPanel.classList.add('hidden');
+            loadingPanel.classList.add('hidden');
+            homePanel.classList.remove('hidden');
+            
+            // Clear the input
+            urlInput.value = '';
+            
+            // Optional: Reset results to placeholder state
+            productTitle.textContent = "Product Title Will Go Here";
+            productImage.src = "https://placehold.co/150x150/e2e8f0/9ca3af?text=Product";
+            productScore.textContent = "?.?";
+            productStars.textContent = "..."
+            productVerdict.textContent = "The quick verdict summary will go here.";
+            prosList.innerHTML = '';
+            consList.innerHTML = '';
+            trendsContainer.innerHTML = '';
+        }
+
+    </script>
+</body>
+</html>
