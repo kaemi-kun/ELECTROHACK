@@ -73,10 +73,10 @@
 
 <h2>🤝 Contributors</h2>
 
-- **Suryam singh** – Electrical Engineering, NIT Jamshedpur  
-- **Akshat kumar** - Electrical Engineering, NIT Jamshedpur 
-- **Shrutika baranwal** -Electrical Engineering, NIT Jamshedpur 
-- **Ankit sagar** - Electrical Engineering, NIT Jamshedpur 
+- **Suryam Singh** – Electrical Engineering, NIT Jamshedpur  
+- **Akshat Kumar** - Electrical Engineering, NIT Jamshedpur 
+- **Shrutika Baranwal** -Electrical Engineering, NIT Jamshedpur 
+- **Ankit Sagar** - Electrical Engineering, NIT Jamshedpur 
 
 ---
 
