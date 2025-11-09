@@ -1,4 +1,5 @@
 # ELECTROHACK
+<<<<<<< HEAD
 <!doctype html>
 <html lang="en">
 <head>
@@ -89,3 +90,9 @@
   </article>
 </body>
 </html>
+=======
+This repo is for Electrohack competition of Pravardhan 2K25
+<br>
+;))
+Hello
+>>>>>>> b2ac1e33e5e02a7b42a5a79d248eea4d46e5b93f
