@@ -7,7 +7,7 @@ def scrape_amazon_product(url):
     print(f"🎯 Scraping: {url}")
     
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=False)
         page = browser.new_page()
         
         try:
