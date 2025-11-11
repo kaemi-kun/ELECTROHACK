@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONCISE - AI-Powered Product Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================================================================== */
+        /* 1. Global Styles & Resets
+        /* ================================================================== */
+        :root {
+            /* Brand Colors */
+            --color-primary: #3b82f6;
+            --color-primary-dark: #1d4ed8;
+            --color-primary-light: #6393fa;
+            --color-primary-hover: #5782de;
+
+            /* Secondary Colors */
+            --color-secondary-green: #22c55e;
+            --color-secondary-red: #f63c3c;
+            --color-red-light: #fee2e2;
+            --color-error: #f79c9c;
+
+            /* Text Colors */
+            --color-text-dark: #111827;
+            --color-text-medium: #374151;
+            --color-text-light: #6b7280;
+            --color-text-subtle: #9ca3af;
+            --color-text-white: #ffffff;
+
+            /* Backgrounds & Borders */
+            --color-bg-light: #f9fafb;
+            --color-bg-white: #ffffff;
+            --color-border: #e5e7eb;
+
+            /* Gradients */
+            --gradient-nav: linear-gradient(90deg, #76f6f6 0%, #a9a9ff 35%, #9ddae8 100%);
+            --gradient-footer: linear-gradient(90deg, #b4e4e4 0%, #9797eb 35%, #91dae9 100%);
+            --gradient-text: linear-gradient(90deg, #99eeee 0%, #7070f5 35%, #9ddae8 100%);
+            --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-card: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            --gradient-button: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--color-bg-light);
+            font-family: 'Inter', sans-serif;
+            color: var(--color-text-dark);
+            min-height: 100%;
+            width: 100%;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        .animate-slide-in-up {
+            animation: slideInUp 0.5s ease-out;
+            animation-fill-mode: backwards;
+        }
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* ================================================================== */
+        /* 2. App Layout
+        /* ================================================================== */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        header {
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        main:has(#results-panel:not(.hidden)) {
+            padding: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            main:has(#results-panel:not(.hidden)) {
+                padding: 2.5rem;
+            }
+        }
+
+        footer {
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .panel, .panel-results {
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .panel {
+            max-width: 672px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: min(4em, 6%);
+            background: var(--gradient-card);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-results {
+            max-width: 1152px;
+        }
+
+        /* ================================================================== */
+        /* 3. Header & Footer
+        /* ================================================================== */
+        .navcontainer {
+            background: var(--gradient-nav);
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            width: 100%;
+            padding: 0 2rem;
+        }
+
+        #navlist {
+            list-style: none;
+            font-size: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #navlogo {
+            font-size: 1.75rem;
+            color: var(--color-text-white);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .navlogo-clickable {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .navlogo-clickable:hover {
+            transform: scale(1.05);
+        }
+
+        #listitem {
+            display: flex;
+            gap: 40px;
+        }
+
+        #listitem a {
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        #listitem a:hover {
+            transform: translateY(-2px);
+        }
+
+        #listitem a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--color-text-white);
+            transition: width 0.3s ease;
+        }
+
+        #listitem a:hover::after {
+            width: 100%;
+        }
+
+        .footer {
+            background: var(--gradient-footer);
+            width: 100%;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .footer p {
+            color: var(--color-text-white);
+            font-size: 0.875rem;
+        }
+
+        /* ================================================================== */
+        /* 4. Panel 1: Home
+        /* ================================================================== */
+        .home-header {
+            text-align: center;
+        }
+
+        .title-main-blue, .title-main-gray, .loading-title {
+            font-weight: 800;
+            background: var(--gradient-hero);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .title-main-blue {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .title-main-gray {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .subtitle {
+            margin-top: 16px;
+            font-size: 1rem;
+            color: var(--color-text-light);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .input-section {
+            margin-top: 40px;
+        }
+
+        .input-group {
+            display: flex;
+            width: 100%;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .input-group:focus-within {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        #url-input {
+            width: 100%;
+            padding: 18px 20px;
+            font-size: 1.125rem;
+            border: 1px solid var(--color-border);
+            border-right: 0;
+            background: white;
+        }
+
+        #url-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        #analyze-button {
+            padding: 18px 30px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-text-white);
+            background: var(--gradient-button);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #analyze-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        #analyze-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.5);
+        }
+
+        .error-message {
+            margin-top: 12px;
+            text-align: center;
+            color: var(--color-error);
+            font-weight: 500;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: rgba(247, 156, 156, 0.1);
+        }
+
+        /* ================================================================== */
+        /* 5. Panel 2: Loading
+        /* ================================================================== */
+        .loading-header {
+            text-align: center;
+        }
+
+        .loading-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .loading-subtitle {
+            margin-top: 12px;
+            font-size: 1.125rem;
+            color: var(--color-text-light);
+        }
+
+        .stepper-container {
+            margin-top: 40px;
+            max-width: 512px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stepper-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .stepper-list > li + li {
+            margin-top: 24px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            font-size: 1.125rem;
+            font-weight: 500;
+            padding: 10px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .step-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            font-weight: 600;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .step-pending {
+            color: var(--color-text-subtle);
+        }
+
+        .step-pending .step-icon {
+            border: 2px solid var(--color-text-subtle);
+            color: var(--color-text-subtle);
+        }
+
+        .step-active {
+            color: var(--color-primary);
+        }
+
+        .step-active .step-icon {
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            animation: spin 1s linear infinite;
+        }
+
+        .step-done {
+            color: var(--color-text-dark);
+        }
+
+        .step-done .step-icon {
+            background-color: var(--color-secondary-green);
+            color: var(--color-text-white);
+            border: 2px solid var(--color-secondary-green);
+        }
+
+        /* ================================================================== */
+        /* 6. Panel 3: Results
+        /* ================================================================== */
+        .product-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--color-bg-white);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--color-border);
+            margin-bottom: 2rem;
+        }
+
+        #product-image {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-info {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #product-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .score-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .score-number-blue {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-hero);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .score-number-gray {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-text-subtle);
+            margin: 0 8px;
+        }
+
+        .product-stars {
+            margin-left: 12px;
+            font-size: 1.75rem;
+        }
+
+        #product-verdict {
+            margin-top: 12px;
+            font-size: 1.25rem;
+            color: var(--color-text-medium);
+            font-weight: 500;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pros-cons-grid {
+            margin-top: 32px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+
+        .card {
+            background-color: var(--color-bg-white);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+
+        .pros-card::before {
+            background: var(--color-secondary-green);
+        }
+
+        .cons-card::before {
+            background: var(--color-secondary-red);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        .pros-cons-grid .card {
+            margin-top: 0;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .pros-title .card-icon {
+            color: var(--color-secondary-green);
+        }
+
+        .cons-title .card-icon {
+            color: var(--color-secondary-red);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+        }
+
+        .review-list {
+            margin-top: 16px;
+            list-style-type: none;
+            color: var(--color-text-medium);
+            font-size: 1.125rem;
+            padding-left: 0;
+        }
+
+        .review-list > li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .review-list > li:last-child {
+            border-bottom: none;
+        }
+
+        .review-list > li::before {
+            content: '•';
+            color: var(--color-primary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-right: 10px;
+            margin-top: 2px;
+        }
+
+        .card-title-standalone {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .trends-container {
+            margin-top: 20px;
+        }
+
+        .trends-container > .trend-item + .trend-item {
+            margin-top: 24px;
+        }
+
+        .trend-item {
+            background: rgba(249, 250, 251, 0.7);
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .trend-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .trend-topic {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-text-medium);
+        }
+
+        .trend-sentiment {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-light);
+        }
+
+        .trend-bar-container {
+            display: flex;
+            width: 100%;
+            height: 12px;
+            background-color: var(--color-red-light);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .trend-bar-positive {
+            background: linear-gradient(90deg, var(--color-secondary-green), #4ade80);
+            height: 100%;
+            transition: width 1s ease-in-out;
+        }
+
+        .reset-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .button-primary {
+            padding: 16px 32px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-text-white);
+            background: var(--gradient-button);
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .button-primary:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.5);
+        }
+
+        /* ================================================================== */
+        /* 7. Responsive Design
+        /* ================================================================== */
+        @media (min-width: 768px) {
+            .title-main-blue {
+                font-size: 4rem;
+            }
+
+            .title-main-gray {
+                font-size: 3.5rem;
+            }
+
+            .product-header {
+                flex-direction: row;
+                text-align: left;
+            }
+
+            .product-info {
+                margin-left: 30px;
+                margin-top: 0;
+                text-align: left;
+            }
+
+            .score-container {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .pros-cons-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .title-main-blue {
+                font-size: 2.5rem;
+            }
+
+            .title-main-gray {
+                font-size: 2rem;
+            }
+
+            #navlist {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            #listitem {
+                gap: 20px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            #url-input {
+                border-radius: 12px 12px 0 0;
+                border-right: 1px solid var(--color-border);
+                border-bottom: none;
+            }
+
+            #analyze-button {
+                border-radius: 0 0 12px 12px;
+            }
+        }
+
+        /* ================================================================== */
+        /* 8. Additional Enhancements
+        /* ================================================================== */
+        .feature-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--color-primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin: 0 5px 10px;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            background: var(--color-primary);
+            top: 10%;
+            left: 5%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            background: var(--color-secondary-green);
+            top: 60%;
+            right: 10%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        .shape-3 {
+            width: 100px;
+            height: 100px;
+            background: var(--color-secondary-red);
+            bottom: 20%;
+            left: 15%;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        .success-animation {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #4bb71b;
+            stroke-miterlimit: 10;
+            box-shadow: inset 0px 0px 0px #4bb71b;
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+
+        .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #4bb71b;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 30px #4bb71b;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div id="app-container" class="app-container">
+        <header>
+            <div class="navcontainer">
+                <nav>
+                    <ul id="navlist">
+                        <li>
+                            <a href="#" id="nav-link-home" class="navlogo-clickable">
+                                <p id="navlogo">
+                                    <i class="fas fa-brain logo-icon"></i>
+                                    CONCISE
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <div id="listitem">
+                                <a href="n.html">Home</a>
+                                <a href="contact.html">Contact</a>
+                                <a href="about.html">About</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <div id="home-panel" class="panel">
+                <div class="home-header">
+                    <h1 class="title-main-blue">Stop Guessing.</h1>
+                    <h2 class="title-main-gray">Start Summarizing.</h2>
+                    <p class="subtitle">
+                        Paste any product link to get an instant, unbiased summary of all reviews—pros, cons, and top trends.
+                    </p>
+                    <div style="margin-top: 20px;">
+                        <span class="feature-badge"><i class="fas fa-bolt"></i> Instant Results</span>
+                        <span class="feature-badge"><i class="fas fa-robot"></i> AI-Powered</span>
+                        <span class="feature-badge"><i class="fas fa-chart-line"></i> Data-Driven</span>
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <input type="text" id="url-input" placeholder="Paste Amazon, eBay, or any product URL here...">
+                        <button id="analyze-button">
+                            <i class="fas fa-chart-bar"></i> Analyze Reviews
+                        </button>
+                    </div>
+                    <div id="error-message" class="error-message hidden">
+                        Please paste a valid product URL to begin.
+                    </div>
+                </div>
+            </div>
+
+            <div id="loading-panel" class="panel hidden animate-fade-in">
+                <div class="loading-header">
+                    <h2 class="loading-title">Analyzing Reviews...</h2>
+                    <p class="loading-subtitle">
+                        Hold tight! Our AI is reading thousands of reviews to build your report.
+                    </p>
+                </div>
+
+                <div class="stepper-container">
+                    <ul class="stepper-list">
+                        <li id="step-1" class="step-item step-pending">
+                            <div class="step-icon">1</div>
+                            Fetching product page
+                        </li>
+                        <li id="step-2" class="step-item step-pending">
+                            <div class="step-icon">2</div>
+                            Reading all reviews
+                        </li>
+                        <li id="step-3" class="step-item step-pending">
+                            <div class="step-icon">3</div>
+                            Analyzing sentiment and topics
+                        </li>
+                        <li id="step-4" class="step-item step-pending">
+                            <div class="step-icon">4</div>
+                            Generating final report
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="results-panel" class="panel-results hidden animate-fade-in">
+                <div class="success-animation">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
+                </div>
+                
+                <div id="product-header" class="product-header animate-slide-in-up" style="animation-delay: 0.1s;">
+                    <img id="product-image" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Product Image">
+                    <div class="product-info">
+                        <h2 id="product-title">Sony WH-1000XM5 Wireless Noise-Canceling Headphones</h2>
+                        
+                        <div class="score-container">
+                            <div id="product-score" class="score-number-blue">4.6</div>
+                            <div class="score-number-gray">/</div>
+                            <div class="score-number-gray">5.0</div>
+                            <div id="product-stars" class="product-stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                        
+                        <p id="product-verdict">Excellent noise cancellation and sound quality, but premium price and average microphone quality are considerations.</p>
+                    </div>
+                </div>
+
+                <div class="pros-cons-grid">
+                    <div class="card pros-card animate-slide-in-up" style="animation-delay: 0.3s;">
+                        <h3 class="card-title pros-title">
+                            <svg class="card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M2 10.313V12a9.01 9.01 0 0 0 1.25 4.33c.09.18.18.35.28.52A3.001 3.001 0 0 0 6 18.5V21a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-2.5a3.001 3.001 0 0 0 2.47-1.64.998.998 0 0 0 .28-.52A9.01 9.01 0 0 0 20 12v-1.688a1.99 1.99 0 0 0-.6-1.458l-3-3a1.99 1.99 0 0 0-1.458-.6H7.99C6.89 3.25 6 4.14 6 5.25v5.063Z" />
+                            </svg>
+                            <span class="pros">What People Liked (Pros)</span>
+                        </h3>
+                        <ul id="pros-list" class="review-list">
+                            <li>Outstanding noise cancellation that blocks almost all ambient sounds</li>
+                            <li>Superb sound quality with rich bass and clear highs</li>
+                            <li>Very comfortable for long listening sessions</li>
+                            <li>Excellent battery life lasting over 30 hours</li>
+                            <li>Quick charging feature provides hours of playback in minutes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card cons-card animate-slide-in-up" style="animation-delay: 0.5s;">
+                        <h3 class="card-title cons-title">
+                            <svg class="card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M2 13.687V12a9.01 9.01 0 0 1 1.25-4.33.998.998 0 0 1 .28-.52A3.001 3.001 0 0 1 6 5.5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v2.5a3.001 3.001 0 0 1 2.47 1.64.998.998 0 0 1 .28.52A9.01 9.01 0 0 1 20 12v1.688a1.99 1.99 0 0 1-.6 1.458l-3 3a1.99 1.99 0 0 1-1.458.6H7.99C6.89 18.75 6 17.86 6 16.75v-5.063Z" />
+                            </svg>
+                            <span class="cons">What People Disliked (Cons)</span>
+                        </h3>
+                        <ul id="cons-list" class="review-list">
+                            <li>Premium price point compared to competitors</li>
+                            <li>Microphone quality could be better for calls</li>
+                            <li>Case is bulkier than previous models</li>
+                            <li>Touch controls can be overly sensitive</li>
+                            <li>Not fully foldable for compact storage</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card animate-slide-in-up" style="animation-delay: 0.7s;">
+                    <h3 class="card-title-standalone">
+                        <i class="fas fa-chart-line" style="margin-right: 10px;"></i> 
+                        Top Topics & Sentiment
+                    </h3>
+                    <div id="trends-container" class="trends-container">
+                        <div class="trend-item">
+                            <div class="trend-header">
+                                <span class="trend-topic">Noise Cancellation</span>
+                                <span class="trend-sentiment">92% Positive</span>
+                            </div>
+                            <div class="trend-bar-container">
+                                <div class="trend-bar-positive" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div class="trend-item">
+                            <div class="trend-header">
+                                <span class="trend-topic">Sound Quality</span>
+                                <span class="trend-sentiment">88% Positive</span>
+                            </div>
+                            <div class="trend-bar-container">
+                                <div class="trend-bar-positive" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div class="trend-item">
+                            <div class="trend-header">
+                                <span class="trend-topic">Comfort</span>
+                                <span class="trend-sentiment">85% Positive</span>
+                            </div>
+                            <div class="trend-bar-container">
+                                <div class="trend-bar-positive" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="trend-item">
+                            <div class="trend-header">
+                                <span class="trend-topic">Battery Life</span>
+                                <span class="trend-sentiment">90% Positive</span>
+                            </div>
+                            <div class="trend-bar-container">
+                                <div class="trend-bar-positive" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="trend-item">
+                            <div class="trend-header">
+                                <span class="trend-topic">Price Value</span>
+                                <span class="trend-sentiment">65% Positive</span>
+                            </div>
+                            <div class="trend-bar-container">
+                                <div class="trend-bar-positive" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reset-container">
+                    <button id="reset-button" class="button-primary">
+                        <i class="fas fa-redo"></i> Analyze Another Product
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+           <div class="footer">
+             <p>
+                 Copyright &copy; CONCISE pvt Ltd 2024 | AI-Powered Product Analysis | All Rights Reserved
+             </p>
+           </div>
+        </footer>
+    </div>
+
+    <script>
+        // --- 1. GET ALL THE ELEMENTS ---
+        const homePanel = document.getElementById('home-panel');
+        const loadingPanel = document.getElementById('loading-panel');
+        const resultsPanel = document.getElementById('results-panel');
+        
+        const urlInput = document.getElementById('url-input');
+        const analyzeButton = document.getElementById('analyze-button');
+        const errorMessage = document.getElementById('error-message');
+
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const step3 = document.getElementById('step-3');
+        const step4 = document.getElementById('step-4');
+        const steps = [step1, step2, step3, step4];
+
+        const productImage = document.getElementById('product-image');
+        const productTitle = document.getElementById('product-title');
+        const productScore = document.getElementById('product-score');
+        const productStars = document.getElementById('product-stars');
+        const productVerdict = document.getElementById('product-verdict');
+        const prosList = document.getElementById('pros-list');
+        const consList = document.getElementById('cons-list');
+        const trendsContainer = document.getElementById('trends-container');
+        const resetButton = document.getElementById('reset-button');
+        
+        // --- 2. FAKE DATA FOR THE DEMO ---
+        const FAKE_DATA = {
+            productTitle: "Sony WH-1000XM5 Wireless Noise-Canceling Headphones",
+            productImage: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+            score: 4.6,
+            stars: "⭐⭐⭐⭐⭐",
+            verdict: "Excellent noise cancellation and sound quality, but premium price and average microphone quality are considerations.",
+            pros: [
+                "Outstanding noise cancellation that blocks almost all ambient sounds",
+                "Superb sound quality with rich bass and clear highs",
+                "Very comfortable for long listening sessions",
+                "Excellent battery life lasting over 30 hours",
+                "Quick charging feature provides hours of playback in minutes"
+            ],
+            cons: [
+                "Premium price point compared to competitors",
+                "Microphone quality could be better for calls",
+                "Case is bulkier than previous models",
+                "Touch controls can be overly sensitive",
+                "Not fully foldable for compact storage"
+            ],
+            trends: [
+                { topic: "Noise Cancellation", positive: 92, negative: 8 },
+                { topic: "Sound Quality", positive: 88, negative: 12 },
+                { topic: "Comfort", positive: 85, negative: 15 },
+                { topic: "Battery Life", positive: 90, negative: 10 },
+                { topic: "Price Value", positive: 65, negative: 35 }
+            ]
+        };
+
+        // --- 3. EVENT LISTENERS ---
+        analyzeButton.addEventListener('click', startAnalysis);
+        resetButton.addEventListener('click', resetApp);
+        
+        // --- 4. CORE FUNCTIONS ---
+
+        async function startAnalysis() {
+    const url = urlInput.value;
+    
+    if (!url || !url.includes('http')) {
+        errorMessage.classList.remove('hidden');
+        return;
+    }
+    
+    errorMessage.classList.add('hidden');
+    homePanel.classList.add('hidden');
+    resultsPanel.classList.add('hidden');
+    loadingPanel.classList.remove('hidden');
+
+    try {
+        const response = await fetch('http://localhost:8000/analyze', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ product_url: url })
+        });
+        
+        console.log("Response status:", response.status); // ADD THIS LINE
+        console.log("Response ok:", response.ok); // ADD THIS LINE
+        
+        const data = await response.json();
+        
+        console.log("Backend data:", data); // ADD THIS LINE
+        
+        if (data.status === 'success') {
+            loadingPanel.classList.add('hidden');
+            resultsPanel.classList.remove('hidden');
+            populateResults(data);
+        } else {
+            throw new Error(data.message);
+        }
+    } catch (error) {
+        console.error('Analysis failed:', error);
+        loadingPanel.classList.add('hidden');
+        resultsPanel.classList.remove('hidden');
+        populateResults(FAKE_DATA);
+    }
+}
+
+        function simulateLoading() {
+            // Reset all steps to pending
+            steps.forEach(step => {
+                step.className = "step-item step-pending";
+                // Reset icon to its number
+                const iconDiv = step.querySelector('.step-icon');
+                if (iconDiv) {
+                    iconDiv.textContent = steps.indexOf(step) + 1;
+                }
+            });
+        
+            // Simulate the steps
+            setTimeout(() => { updateStep(step1, 'active', 1); }, 500);
+            setTimeout(() => { updateStep(step1, 'done', 1); updateStep(step2, 'active', 2); }, 1500);
+            setTimeout(() => { updateStep(step2, 'done', 2); updateStep(step3, 'active', 3); }, 2500);
+            setTimeout(() => { updateStep(step3, 'done', 3); updateStep(step4, 'active', 4); }, 3500);
+            setTimeout(() => { updateStep(step4, 'done', 4); }, 4000);
+        }
+        
+        /**
+         * Helper to update the class and icon of a loading step.
+         */
+        function updateStep(stepElement, status, stepNumber) {
+            const iconMap = {
+                pending: `${stepNumber}`,
+                active: '⚙', // Spinner emoji
+                done: '✔' // Checkmark emoji
+            };
+            
+            // Set the class name for styling
+            stepElement.className = `step-item step-${status}`;
+            
+            // Update the icon text
+            const iconDiv = stepElement.querySelector('.step-icon');
+            if (iconDiv) {
+                iconDiv.textContent = iconMap[status];
+            }
+        }
+
+        /**
+         * Populates the results panel with data.
+         */
+        function populateResults(data) {
+    console.log("Backend data received:", data);
+    
+    // Use the ACTUAL field names from backend
+    productTitle.textContent = data.productTitle || "Product";
+    productScore.textContent = data.score || "N/A";  // Our AI rating
+    productStars.textContent = data.stars || "⭐⭐⭐☆☆";
+    productVerdict.textContent = data.verdict || "Analysis complete";
+    
+    // Clear previous data
+    prosList.innerHTML = '';
+    consList.innerHTML = '';
+    trendsContainer.innerHTML = '';
+
+    // Show AI-generated pros
+    if (data.pros && data.pros.length > 0) {
+        data.pros.forEach(pro => {
+            const li = document.createElement('li');
+            li.textContent = pro;
+            prosList.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.textContent = "No pros identified";
+        prosList.appendChild(li);
+    }
+
+    // Show AI-generated cons
+    if (data.cons && data.cons.length > 0) {
+        data.cons.forEach(con => {
+            const li = document.createElement('li');
+            li.textContent = con;
+            consList.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.textContent = "No cons identified";
+        consList.appendChild(li);
+    }
+
+    // Show comprehensive analysis including review count
+    trendsContainer.innerHTML = `
+        <div class="trend-item">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-lg font-medium text-gray-700">Buy Score</span>
+                <span class="text-sm font-medium text-gray-500">${data.buyScore || 0}/100 - ${data.recommendation || "N/A"}</span>
+            </div>
+            <div class="flex w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="bg-green-500" style="width: ${data.buyScore || 0}%"></div>
+            </div>
+        </div>
+        <div class="trend-item">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-lg font-medium text-gray-700">Total Reviews</span>
+                <span class="text-sm font-medium text-gray-500">${data.totalReviews || 0} reviews analyzed</span>
+            </div>
+            <div class="flex w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="bg-blue-500" style="width: ${Math.min((data.totalReviews || 0) / 100, 100)}%"></div>
+            </div>
+        </div>
+        <div class="trend-item">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-lg font-medium text-gray-700">Price</span>
+                <span class="text-sm font-medium text-gray-500">${data.price || "Not available"}</span>
+            </div>
+            <div class="flex w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="bg-purple-500" style="width: 100%"></div>
+            </div>
+        </div>
+    `;
+}
+        function resetApp() {
+            // Hide results/loading, show home
+            resultsPanel.classList.add('hidden');
+            loadingPanel.classList.add('hidden');
+            homePanel.classList.remove('hidden');
+            
+            // Clear the input
+            urlInput.value = '';
+            
+            // Reset focus to input
+            urlInput.focus();
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some interactive elements
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
